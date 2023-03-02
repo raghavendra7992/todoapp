@@ -65,10 +65,60 @@ const User = ({ userId }) => {
 };
 
 
+// search funcnalities
+
+
+
+const [tasks, setTasks] = useState([]);
+const [searchQuery, setSearchQuery] = useState('');
+
+useEffect(() => {
+  const fetchTasks = async () => {
+    const response = await fetch('https://jsonplaceholder.typicode.com/todos');
+    const data = await response.json();
+    setTasks(data);
+  };
+  
+  fetchTasks();
+}, []);
+
+const handleSearch = (event) => {
+  setSearchQuery(event.target.value);
+};
+
+const filteredTasks = tasks.filter(task => {
+  return task.title.toLowerCase().includes(searchQuery.toLowerCase());
+});
+
+
   
   return (
     <>
-    <h1 style={{textAlign:"center"}}>Todo List</h1>
+    <div style={{display:"flex", gap:"100px"}}>
+    <h1>Todo List</h1>
+    <div>
+    <input
+    style={{borderRadius:"40px",width:"225%",height:"25%",marginTop:"40px"}}
+  type="text"
+  placeholder="Search Todos"
+  onChange={handleSearch} value={searchQuery}
+/>
+
+<ul>
+  
+        {filteredTasks.length === 0 ? (
+          <li>No tasks matching the search query.</li>
+        ) : (
+          filteredTasks.map(task => (
+            <div key={task.id}>
+
+            </div>
+          ))
+        )}
+      </ul>
+      </div>
+     
+    </div>
     <div style={{display:"flex"}}>
       
     <Table size="sm" variant="striped" colorScheme="teal">
@@ -96,6 +146,7 @@ const User = ({ userId }) => {
 </Table>
 
 <div style={{float:"right"}}>
+  <h1 style={{marginLeft:"100px",color:"blue",backgroundColor:"pink"}}>user detail</h1>
 {getuser && <User userId={getuser} />}
 </div>
 </div>
